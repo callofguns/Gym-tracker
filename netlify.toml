@@ -1,0 +1,15 @@
+# Netlify is only deployed from the "Release (Netlify)" GitHub Action when a v* tag is pushed.
+# Do not connect the repo for continuous deployment, or every push would go live.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

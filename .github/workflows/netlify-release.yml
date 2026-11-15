@@ -1,0 +1,40 @@
+# Main public site: Netlify updates only when a release tag (v*) is pushed.
+name: Release (Netlify)
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: netlify-release
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+        env:
+          BASE_PATH: /
+      - name: Check Netlify settings
+        run: |
+          if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ -z "$NETLIFY_SITE_ID" ]; then
+            echo "::error::Add the NETLIFY_AUTH_TOKEN secret and NETLIFY_SITE_ID variable in the repo's Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+      - name: Deploy to Netlify (production)
+        run: npx --yes netlify-cli@27.19.0 deploy --prod --dir=dist --site="$NETLIFY_SITE_ID" --message="Release ${GITHUB_REF_NAME}"

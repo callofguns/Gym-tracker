@@ -1,0 +1,191 @@
+import type { BodyPart, Category, Exercise, Muscle } from '../types'
+import { slug } from '../lib/id'
+
+type Row = [name: string, bodyPart: BodyPart, category: Category, muscle: Muscle]
+
+const rows: Row[] = [
+  // Chest
+  ['Bench Press (Barbell)', 'chest', 'barbell', 'chest'],
+  ['Bench Press (Dumbbell)', 'chest', 'dumbbell', 'chest'],
+  ['Incline Bench Press (Barbell)', 'chest', 'barbell', 'chest'],
+  ['Incline Bench Press (Dumbbell)', 'chest', 'dumbbell', 'chest'],
+  ['Decline Bench Press (Barbell)', 'chest', 'barbell', 'chest'],
+  ['Chest Press (Machine)', 'chest', 'machine', 'chest'],
+  ['Incline Chest Press (Machine)', 'chest', 'machine', 'chest'],
+  ['Chest Fly (Dumbbell)', 'chest', 'dumbbell', 'chest'],
+  ['Chest Fly (Machine)', 'chest', 'machine', 'chest'],
+  ['Cable Crossover', 'chest', 'cable', 'chest'],
+  ['Push Up', 'chest', 'reps_only', 'chest'],
+  ['Chest Dip', 'chest', 'weighted_bodyweight', 'chest'],
+  ['Pullover (Dumbbell)', 'chest', 'dumbbell', 'chest'],
+
+  // Back
+  ['Deadlift (Barbell)', 'back', 'barbell', 'lower_back'],
+  ['Bent Over Row (Barbell)', 'back', 'barbell', 'upper_back'],
+  ['Bent Over Row (Dumbbell)', 'back', 'dumbbell', 'upper_back'],
+  ['Pull Up', 'back', 'weighted_bodyweight', 'lats'],
+  ['Pull Up (Assisted)', 'back', 'assisted_bodyweight', 'lats'],
+  ['Chin Up', 'back', 'weighted_bodyweight', 'lats'],
+  ['Lat Pulldown (Cable)', 'back', 'cable', 'lats'],
+  ['Lat Pulldown (Machine)', 'back', 'machine', 'lats'],
+  ['Straight Arm Pulldown (Cable)', 'back', 'cable', 'lats'],
+  ['Seated Row (Cable)', 'back', 'cable', 'upper_back'],
+  ['Seated Row (Machine)', 'back', 'machine', 'upper_back'],
+  ['T Bar Row', 'back', 'barbell', 'upper_back'],
+  ['Face Pull (Cable)', 'back', 'cable', 'upper_back'],
+  ['Reverse Fly (Dumbbell)', 'back', 'dumbbell', 'upper_back'],
+  ['Reverse Fly (Machine)', 'back', 'machine', 'upper_back'],
+  ['Shrug (Barbell)', 'back', 'barbell', 'upper_back'],
+  ['Shrug (Dumbbell)', 'back', 'dumbbell', 'upper_back'],
+  ['Back Extension', 'back', 'weighted_bodyweight', 'lower_back'],
+  ['Rack Pull (Barbell)', 'back', 'barbell', 'lower_back'],
+
+  // Shoulders
+  ['Overhead Press (Barbell)', 'shoulders', 'barbell', 'shoulders'],
+  ['Shoulder Press (Dumbbell)', 'shoulders', 'dumbbell', 'shoulders'],
+  ['Shoulder Press (Machine)', 'shoulders', 'machine', 'shoulders'],
+  ['Arnold Press (Dumbbell)', 'shoulders', 'dumbbell', 'shoulders'],
+  ['Lateral Raise (Dumbbell)', 'shoulders', 'dumbbell', 'shoulders'],
+  ['Lateral Raise (Cable)', 'shoulders', 'cable', 'shoulders'],
+  ['Lateral Raise (Machine)', 'shoulders', 'machine', 'shoulders'],
+  ['Front Raise (Dumbbell)', 'shoulders', 'dumbbell', 'shoulders'],
+  ['Upright Row (Barbell)', 'shoulders', 'barbell', 'shoulders'],
+
+  // Arms
+  ['Bicep Curl (Barbell)', 'arms', 'barbell', 'biceps'],
+  ['Bicep Curl (Dumbbell)', 'arms', 'dumbbell', 'biceps'],
+  ['Bicep Curl (Cable)', 'arms', 'cable', 'biceps'],
+  ['Bicep Curl (Machine)', 'arms', 'machine', 'biceps'],
+  ['EZ Bar Curl', 'arms', 'barbell', 'biceps'],
+  ['Hammer Curl (Dumbbell)', 'arms', 'dumbbell', 'biceps'],
+  ['Preacher Curl (Barbell)', 'arms', 'barbell', 'biceps'],
+  ['Preacher Curl (Machine)', 'arms', 'machine', 'biceps'],
+  ['Concentration Curl (Dumbbell)', 'arms', 'dumbbell', 'biceps'],
+  ['Triceps Pushdown (Cable)', 'arms', 'cable', 'triceps'],
+  ['Triceps Extension (Cable)', 'arms', 'cable', 'triceps'],
+  ['Triceps Extension (Dumbbell)', 'arms', 'dumbbell', 'triceps'],
+  ['Triceps Extension (Machine)', 'arms', 'machine', 'triceps'],
+  ['Skullcrusher (Barbell)', 'arms', 'barbell', 'triceps'],
+  ['Close Grip Bench Press (Barbell)', 'arms', 'barbell', 'triceps'],
+  ['Triceps Dip', 'arms', 'weighted_bodyweight', 'triceps'],
+  ['Wrist Curl (Dumbbell)', 'arms', 'dumbbell', 'forearms'],
+  ['Reverse Curl (Barbell)', 'arms', 'barbell', 'forearms'],
+  ['Dead Hang', 'arms', 'duration', 'forearms'],
+
+  // Legs
+  ['Squat (Barbell)', 'legs', 'barbell', 'quads'],
+  ['Front Squat (Barbell)', 'legs', 'barbell', 'quads'],
+  ['Goblet Squat (Dumbbell)', 'legs', 'dumbbell', 'quads'],
+  ['Hack Squat (Machine)', 'legs', 'machine', 'quads'],
+  ['Bodyweight Squat', 'legs', 'reps_only', 'quads'],
+  ['Leg Press (Machine)', 'legs', 'machine', 'quads'],
+  ['Leg Extension (Machine)', 'legs', 'machine', 'quads'],
+  ['Bulgarian Split Squat (Dumbbell)', 'legs', 'dumbbell', 'quads'],
+  ['Lunge (Dumbbell)', 'legs', 'dumbbell', 'quads'],
+  ['Step Up (Dumbbell)', 'legs', 'dumbbell', 'quads'],
+  ['Wall Sit', 'legs', 'duration', 'quads'],
+  ['Hip Adductor (Machine)', 'legs', 'machine', 'quads'],
+  ['Lying Leg Curl (Machine)', 'legs', 'machine', 'hamstrings'],
+  ['Seated Leg Curl (Machine)', 'legs', 'machine', 'hamstrings'],
+  ['Romanian Deadlift (Barbell)', 'legs', 'barbell', 'hamstrings'],
+  ['Romanian Deadlift (Dumbbell)', 'legs', 'dumbbell', 'hamstrings'],
+  ['Good Morning (Barbell)', 'legs', 'barbell', 'hamstrings'],
+  ['Sumo Deadlift (Barbell)', 'legs', 'barbell', 'glutes'],
+  ['Hip Thrust (Barbell)', 'legs', 'barbell', 'glutes'],
+  ['Glute Bridge', 'legs', 'weighted_bodyweight', 'glutes'],
+  ['Glute Kickback (Cable)', 'legs', 'cable', 'glutes'],
+  ['Hip Abductor (Machine)', 'legs', 'machine', 'glutes'],
+  ['Standing Calf Raise (Machine)', 'legs', 'machine', 'calves'],
+  ['Seated Calf Raise (Machine)', 'legs', 'machine', 'calves'],
+  ['Calf Raise (Dumbbell)', 'legs', 'dumbbell', 'calves'],
+
+  // Core
+  ['Crunch', 'core', 'reps_only', 'abs'],
+  ['Crunch (Machine)', 'core', 'machine', 'abs'],
+  ['Cable Crunch', 'core', 'cable', 'abs'],
+  ['Sit Up', 'core', 'reps_only', 'abs'],
+  ['Hanging Leg Raise', 'core', 'reps_only', 'abs'],
+  ['Lying Leg Raise', 'core', 'reps_only', 'abs'],
+  ['Ab Wheel', 'core', 'reps_only', 'abs'],
+  ['Dead Bug', 'core', 'reps_only', 'abs'],
+  ['Mountain Climber', 'core', 'reps_only', 'abs'],
+  ['Plank', 'core', 'duration', 'abs'],
+  ['Side Plank', 'core', 'duration', 'obliques'],
+  ['Russian Twist', 'core', 'weighted_bodyweight', 'obliques'],
+  ['Bicycle Crunch', 'core', 'reps_only', 'obliques'],
+
+  // Cardio
+  ['Running (Treadmill)', 'cardio', 'cardio', 'cardio'],
+  ['Running (Outdoor)', 'cardio', 'cardio', 'cardio'],
+  ['Walking', 'cardio', 'cardio', 'cardio'],
+  ['Cycling (Stationary)', 'cardio', 'cardio', 'cardio'],
+  ['Cycling (Outdoor)', 'cardio', 'cardio', 'cardio'],
+  ['Rowing (Machine)', 'cardio', 'cardio', 'cardio'],
+  ['Elliptical', 'cardio', 'cardio', 'cardio'],
+  ['Stair Climber', 'cardio', 'cardio', 'cardio'],
+  ['Swimming', 'cardio', 'cardio', 'cardio'],
+  ['Jump Rope', 'cardio', 'duration', 'cardio'],
+
+  // Full body
+  ['Clean and Press (Barbell)', 'full_body', 'barbell', 'full_body'],
+  ['Power Clean (Barbell)', 'full_body', 'barbell', 'full_body'],
+  ['Thruster (Barbell)', 'full_body', 'barbell', 'full_body'],
+  ['Kettlebell Swing', 'full_body', 'kettlebell', 'glutes'],
+  ['Burpee', 'full_body', 'reps_only', 'full_body'],
+  ['Battle Ropes', 'full_body', 'duration', 'full_body'],
+]
+
+export const BUILT_IN_EXERCISES: Exercise[] = rows.map(([name, bodyPart, category, muscle]) => ({
+  id: slug(name),
+  name,
+  bodyPart,
+  category,
+  muscle,
+}))
+
+export const BODY_PARTS: { id: BodyPart; label: string }[] = [
+  { id: 'core', label: 'Core' },
+  { id: 'arms', label: 'Arms' },
+  { id: 'back', label: 'Back' },
+  { id: 'chest', label: 'Chest' },
+  { id: 'legs', label: 'Legs' },
+  { id: 'shoulders', label: 'Shoulders' },
+  { id: 'full_body', label: 'Full Body' },
+  { id: 'cardio', label: 'Cardio' },
+  { id: 'other', label: 'Other' },
+]
+
+export const CATEGORIES: { id: Category; label: string }[] = [
+  { id: 'barbell', label: 'Barbell' },
+  { id: 'dumbbell', label: 'Dumbbell' },
+  { id: 'machine', label: 'Machine/Other' },
+  { id: 'cable', label: 'Cable' },
+  { id: 'kettlebell', label: 'Kettlebell' },
+  { id: 'weighted_bodyweight', label: 'Weighted Bodyweight' },
+  { id: 'assisted_bodyweight', label: 'Assisted Bodyweight' },
+  { id: 'reps_only', label: 'Reps Only' },
+  { id: 'cardio', label: 'Cardio' },
+  { id: 'duration', label: 'Duration' },
+]
+
+export const MUSCLES: { id: Muscle; label: string }[] = [
+  { id: 'chest', label: 'Chest' },
+  { id: 'upper_back', label: 'Upper Back' },
+  { id: 'lats', label: 'Lats' },
+  { id: 'lower_back', label: 'Lower Back' },
+  { id: 'shoulders', label: 'Shoulders' },
+  { id: 'biceps', label: 'Biceps' },
+  { id: 'triceps', label: 'Triceps' },
+  { id: 'forearms', label: 'Forearms' },
+  { id: 'abs', label: 'Abs' },
+  { id: 'obliques', label: 'Obliques' },
+  { id: 'quads', label: 'Quads' },
+  { id: 'hamstrings', label: 'Hamstrings' },
+  { id: 'glutes', label: 'Glutes' },
+  { id: 'calves', label: 'Calves' },
+  { id: 'full_body', label: 'Full Body' },
+  { id: 'cardio', label: 'Cardio' },
+]
+
+export const bodyPartLabel = (b: BodyPart) => BODY_PARTS.find((x) => x.id === b)?.label ?? b
+export const categoryLabel = (c: Category) => CATEGORIES.find((x) => x.id === c)?.label ?? c
